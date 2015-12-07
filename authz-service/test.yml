@@ -1,0 +1,30 @@
+server:
+  applicationConnectors:
+  - type: http 
+    port: 8180
+  adminConnectors:
+  - type: http
+    port: 8181
+  applicationContextPath: /authz/rest
+  adminContextPath: /authz/admin
+    
+logging:
+  level: WARN
+  loggers:
+    "com.sun.jersey.api.client": DEBUG
+    "io.dropwizard": DEBUG
+    "eu.hcomb": DEBUG
+
+authKey:
+   tXBeLe1SX3zR2swZX4Rs5b4QSA3yzG9D2jTEO1DbeQM60nGqntr3+2jdraQlPixp40rTbic9spYH37KLprH3rQ==
+authTimeout:
+   3600
+   
+database:
+   username: root
+   password: root
+   autoCommit: false
+   host: localhost
+   port: 3306
+   schema: authz
+   healthCheckQuery: SELECT id FROM roles LIMIT 0,1

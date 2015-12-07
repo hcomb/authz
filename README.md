@@ -1,1 +1,1 @@
-# authz
+# Authorization Service
