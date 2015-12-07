@@ -4,15 +4,19 @@ import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.Authorizer;
 import io.dropwizard.setup.Environment;
 
+import org.mybatis.guice.datasource.helper.JdbcHelper;
+
 import com.google.inject.Binder;
 import com.google.inject.Guice;
 
 import eu.hcomb.authz.resources.RolesResource;
 import eu.hcomb.authz.service.ProfileService;
 import eu.hcomb.authz.service.impl.ProfileServiceImpl;
+import eu.hcomb.authz.service.mapper.ProfileMapper;
 import eu.hcomb.common.auth.TokenAuthenticator;
 import eu.hcomb.common.auth.UserAuthorizer;
 import eu.hcomb.common.healthcheck.DatasourceHealthCheck;
+import eu.hcomb.common.jdbc.DefaultPersistenceModule;
 import eu.hcomb.common.resources.WhoAmI;
 import eu.hcomb.common.service.TokenService;
 import eu.hcomb.common.service.impl.TokenServiceImpl;
@@ -48,9 +52,15 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 	public void run(AuthorizationConfig configuration, Environment environment) {
 		
 		defaultConfig(environment, configuration);
-
-		AuthorizationPersistence persistence = new AuthorizationPersistence(configuration);
-
+		
+		DefaultPersistenceModule persistence = new DefaultPersistenceModule(configuration) {
+			@Override
+			protected void initialize() {
+				install(JdbcHelper.MySQL);
+				setup();
+		        addMapperClass(ProfileMapper.class);				
+			}
+		};
 		injector = Guice.createInjector(this, persistence);
 
         setupSecurity(environment);
