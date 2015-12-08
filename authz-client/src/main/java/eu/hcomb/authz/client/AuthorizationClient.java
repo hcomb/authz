@@ -9,17 +9,29 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+
+@Singleton
 public class AuthorizationClient {
 
+	@Inject
 	private Client jerseyClient;
+	
+	@Inject
+	@Named("authz.url")
 	private String targetUrl;
+	
+    public void setJerseyClient(Client jerseyClient) {
+		this.jerseyClient = jerseyClient;
+	}
 
-    public AuthorizationClient(Client jerseyClient, String targetUrl) {
-        this.jerseyClient = jerseyClient;
-        this.targetUrl = targetUrl;
-    }
-    
-    public List<String> getRolesByUser(String username) {
+	public void setTargetUrl(String targetUrl) {
+		this.targetUrl = targetUrl;
+	}
+
+	public List<String> getRolesByUser(String username) {
         WebTarget webResource = jerseyClient.target(targetUrl).path("/roles/"+username);
 
         Invocation.Builder invocationBuilder = webResource.request(MediaType.APPLICATION_JSON_TYPE);
