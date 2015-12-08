@@ -16,6 +16,9 @@ public class TestAuthzClient {
 		String targetUrl = "http://localhost:8180/authz/rest";
 		
 		AuthorizationClient client = new AuthorizationClient();
+		client.setJerseyClient(jerseyClient);
+		client.setTargetUrl(targetUrl);
+		
 		List<String> roles = client.getRolesByUser("alex");
 		for (String role : roles) {
 			System.out.println(" * "+role);
