@@ -13,7 +13,7 @@ public class TestAuthzClient {
 	public static void main(String[] args) {
 		
 		Client jerseyClient = new JerseyClientBuilder().build();
-		String targetUrl = "http://localhost:8180/authz/rest";
+		String targetUrl = "http://localhost:8180/authz/api";
 		
 		AuthorizationClient client = new AuthorizationClient();
 		client.setJerseyClient(jerseyClient);
