@@ -15,7 +15,7 @@ import eu.hcomb.authz.service.impl.UserServiceImpl;
 import eu.hcomb.authz.service.mapper.RoleMapper;
 import eu.hcomb.authz.service.mapper.UserMapper;
 import eu.hcomb.common.jdbc.DatasourceHealthCheck;
-import eu.hcomb.common.jdbc.DefaultPersistenceModule;
+import eu.hcomb.common.jdbc.PersistenceModule;
 import eu.hcomb.common.redis.JedisModule;
 import eu.hcomb.common.resources.WhoAmI;
 import eu.hcomb.common.web.BaseApp;
@@ -37,20 +37,22 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 	@Override
 	public void run(AuthorizationConfig configuration, Environment environment) {
 		
-		Module persistence = new DefaultPersistenceModule(configuration, environment) {
+		Module persistence = new PersistenceModule(configuration, environment) {
 			@Override
 			protected void initialize() {
 				install(JdbcHelper.MySQL);
 				setup();
-		        addMapperClass(RoleMapper.class);				
-		        addMapperClass(UserMapper.class);				
+		        addMapperClass(RoleMapper.class);
+		        addMapperClass(UserMapper.class);
 			}
 		};
+		
+		
 		
 		Module jedis = new JedisModule(configuration, environment);
 		
 		injector = Guice.createInjector(this, persistence, jedis);
-
+		
 		defaultConfig(environment, configuration);
         
 		environment.jersey().register(injector.getInstance(WhoAmI.class));
