@@ -2,28 +2,27 @@ package eu.hcomb.authz.client;
 
 
 
-import java.util.List;
-
 import javax.ws.rs.client.Client;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
-public class TestAuthzClient {
+import eu.hcomb.authz.dto.UserDTO;
+
+public class TestLocalLogin {
 
 	public static void main(String[] args) {
-		
 		Client jerseyClient = new JerseyClientBuilder().build();
 		String targetUrl = "http://localhost:8180/authz/api";
 		
-		AuthorizationClient client = new AuthorizationClient();
+		UserCRUDClient client = new UserCRUDClient();
 		client.setJerseyClient(jerseyClient);
 		client.setTargetUrl(targetUrl);
 		
-		List<String> roles = client.getRolesByUser("alex");
-		for (String role : roles) {
-			System.out.println(" * "+role);
-		}
-		
-		
+		UserDTO user = client.login("alex", "pippo");
+		System.out.println(ToStringBuilder.reflectionToString(user, ToStringStyle.MULTI_LINE_STYLE));
+
+
 	}
 }

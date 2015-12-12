@@ -7,10 +7,12 @@ import org.mybatis.guice.datasource.helper.JdbcHelper;
 import com.google.inject.Binder;
 import com.google.inject.Guice;
 
-import eu.hcomb.authz.resources.RolesResource;
-import eu.hcomb.authz.service.ProfileService;
-import eu.hcomb.authz.service.impl.ProfileServiceImpl;
-import eu.hcomb.authz.service.mapper.ProfileMapper;
+import eu.hcomb.authz.resources.LoginResource;
+import eu.hcomb.authz.resources.UserResource;
+import eu.hcomb.authz.service.UserService;
+import eu.hcomb.authz.service.impl.UserServiceImpl;
+import eu.hcomb.authz.service.mapper.RoleMapper;
+import eu.hcomb.authz.service.mapper.UserMapper;
 import eu.hcomb.common.healthcheck.DatasourceHealthCheck;
 import eu.hcomb.common.jdbc.DefaultPersistenceModule;
 import eu.hcomb.common.resources.WhoAmI;
@@ -26,9 +28,8 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		configureSecurity(binder);
 		
 		binder
-			.bind(ProfileService.class)
-			.to(ProfileServiceImpl.class);
-		
+			.bind(UserService.class)
+			.to(UserServiceImpl.class);
 	}	
 
 	@Override
@@ -39,7 +40,8 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 			protected void initialize() {
 				install(JdbcHelper.MySQL);
 				setup();
-		        addMapperClass(ProfileMapper.class);				
+		        addMapperClass(RoleMapper.class);				
+		        addMapperClass(UserMapper.class);				
 			}
 		};
 		
@@ -48,7 +50,8 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		defaultConfig(environment, configuration);
         
 		environment.jersey().register(injector.getInstance(WhoAmI.class));
-		environment.jersey().register(injector.getInstance(RolesResource.class));
+		environment.jersey().register(injector.getInstance(LoginResource.class));
+		environment.jersey().register(injector.getInstance(UserResource.class));
 				
 		environment.healthChecks().register("mysql", injector.getInstance(DatasourceHealthCheck.class));
 		

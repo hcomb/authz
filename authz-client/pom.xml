@@ -25,6 +25,25 @@
 			<version>4.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>eu.hcomb</groupId>
+			<artifactId>authz-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.hcomb</groupId>
+			<artifactId>authn-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.hcomb</groupId>
+			<artifactId>authn-client</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 </project>
