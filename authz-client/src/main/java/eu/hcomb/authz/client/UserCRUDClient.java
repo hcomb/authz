@@ -48,9 +48,12 @@ public class UserCRUDClient {
         
         Response response = invocationBuilder.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 
-        expect(response, new int[]{200});
+        expect(response, new int[]{200, 204});
 
-        return response.readEntity(UserDTO.class);
+        if(response.getStatus() == 204)
+        	return null;
+        else     
+        	return response.readEntity(UserDTO.class);
 	}
 	
 	public int deleteUser(TokenDTO token, Long id) {

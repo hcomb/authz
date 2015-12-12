@@ -14,8 +14,10 @@ import javax.ws.rs.core.MediaType;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 
+import eu.hcomb.authz.UserEvents;
 import eu.hcomb.authz.dto.UserDTO;
 import eu.hcomb.authz.service.UserService;
+import eu.hcomb.common.service.RedisService;
 
 @Api(tags="login")
 @Path("/login")
@@ -25,6 +27,9 @@ public class LoginResource {
 	@Inject
 	protected UserService userService;
 	
+    @Inject 
+    protected RedisService eventChannel;
+    
     @POST
     @Timed
     @ApiOperation(value="User by username and password.", notes = "Get an user with the given username and password")
@@ -36,6 +41,8 @@ public class LoginResource {
 
     	UserDTO user = userService.login(username, password);
 
+    	eventChannel.publish(UserEvents.USER_LOGIN, username);
+    	
     	return user;
     }
 

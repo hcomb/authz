@@ -36,6 +36,13 @@ corsConfig:
    headers: Cookie, Authorization
    allowCredentials: true
 
+redis:
+  host: localhost
+  port: 6379
+  minIdle: 0
+  maxIdle: 0
+  maxTotal: 1924
+  
 swaggerConfig:
    baseUrl: localhost:8180
    resourcePackages: eu.hcomb.common.resources,eu.hcomb.authz.resources

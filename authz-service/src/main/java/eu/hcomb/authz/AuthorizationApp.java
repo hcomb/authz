@@ -6,6 +6,7 @@ import org.mybatis.guice.datasource.helper.JdbcHelper;
 
 import com.google.inject.Binder;
 import com.google.inject.Guice;
+import com.google.inject.Module;
 
 import eu.hcomb.authz.resources.LoginResource;
 import eu.hcomb.authz.resources.UserResource;
@@ -13,8 +14,9 @@ import eu.hcomb.authz.service.UserService;
 import eu.hcomb.authz.service.impl.UserServiceImpl;
 import eu.hcomb.authz.service.mapper.RoleMapper;
 import eu.hcomb.authz.service.mapper.UserMapper;
-import eu.hcomb.common.healthcheck.DatasourceHealthCheck;
+import eu.hcomb.common.jdbc.DatasourceHealthCheck;
 import eu.hcomb.common.jdbc.DefaultPersistenceModule;
+import eu.hcomb.common.redis.JedisModule;
 import eu.hcomb.common.resources.WhoAmI;
 import eu.hcomb.common.web.BaseApp;
 
@@ -35,7 +37,7 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 	@Override
 	public void run(AuthorizationConfig configuration, Environment environment) {
 		
-		DefaultPersistenceModule persistence = new DefaultPersistenceModule(configuration) {
+		Module persistence = new DefaultPersistenceModule(configuration, environment) {
 			@Override
 			protected void initialize() {
 				install(JdbcHelper.MySQL);
@@ -45,7 +47,9 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 			}
 		};
 		
-		injector = Guice.createInjector(this, persistence);
+		Module jedis = new JedisModule(configuration, environment);
+		
+		injector = Guice.createInjector(this, persistence, jedis);
 
 		defaultConfig(environment, configuration);
         
@@ -55,6 +59,7 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 				
 		environment.healthChecks().register("mysql", injector.getInstance(DatasourceHealthCheck.class));
 		
+		setUpSwagger(configuration, environment);
 	}
 
 }

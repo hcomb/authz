@@ -15,7 +15,7 @@ import eu.hcomb.authz.dto.UserDTO;
 
 public class TestUserCRUDClient {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Client jerseyClient = new JerseyClientBuilder().build();
 		String targetUrlUsers = "http://localhost:8180/authz/api";
 		String targetUrlAuthn = "http://localhost:8280/authn/api";
@@ -35,7 +35,9 @@ public class TestUserCRUDClient {
 		System.out.println("1 =====");
 
 		for (int i = 0; i < 1000; i++) {
-						
+		
+			Thread.sleep(1000);
+			
 			List<UserDTO> users = client.getAllUsers(token);
 			System.out.println(users);
 	
