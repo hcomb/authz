@@ -17,12 +17,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import redis.clients.jedis.JedisPool;
+
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 
 import eu.hcomb.authz.UserEvents;
 import eu.hcomb.authz.dto.UserDTO;
 import eu.hcomb.authz.service.UserService;
+import eu.hcomb.common.service.EventEmitter;
 import eu.hcomb.common.service.RedisService;
 
 @Path("/users")
@@ -34,15 +37,15 @@ public class UserResource {
 	protected UserService userService;
 	
     @Inject 
-    protected RedisService eventChannel;
-    
+    protected EventEmitter eventEmitter;
+
     @GET
     @Timed
     @ApiOperation(value="User list.", notes = "Get the users list.")
     @RolesAllowed("ADMIN")
     public List<UserDTO> list() {
     	
-    	eventChannel.publish(UserEvents.LIST, "");
+    	eventEmitter.emit(UserEvents.LIST, "");
     	
     	return userService.getAllUsers();
     }
@@ -54,7 +57,7 @@ public class UserResource {
     @RolesAllowed("ADMIN")
     public UserDTO get(@PathParam("id") Long id) {
 
-    	eventChannel.publish(UserEvents.READ, id);
+    	eventEmitter.emit(UserEvents.READ, id);
 
     	return userService.getUserById(id);
     }
@@ -66,7 +69,7 @@ public class UserResource {
     public UserDTO add(UserDTO user) throws NoSuchAlgorithmException, InvalidKeySpecException {
     	UserDTO ret = userService.insertUser(user);
     	
-    	eventChannel.publish(UserEvents.CREATE, ret);
+    	eventEmitter.emit(UserEvents.CREATE, ret);
     	
     	return ret;
 
@@ -81,7 +84,7 @@ public class UserResource {
 
     	user.setId(id);
 
-    	eventChannel.publish(UserEvents.UPDATE, user);
+    	eventEmitter.emit(UserEvents.UPDATE, user);
 
     	return userService.updateUser(user);
     }
@@ -93,7 +96,7 @@ public class UserResource {
     @RolesAllowed("ADMIN")
     public void delete(@PathParam("id") Long id) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-    	eventChannel.publish(UserEvents.DELETE, id);
+    	eventEmitter.emit(UserEvents.DELETE, id);
 
     	userService.deleteUser(id);
     }

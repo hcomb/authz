@@ -18,6 +18,8 @@ import eu.hcomb.common.jdbc.DatasourceHealthCheck;
 import eu.hcomb.common.jdbc.PersistenceModule;
 import eu.hcomb.common.redis.JedisModule;
 import eu.hcomb.common.resources.WhoAmI;
+import eu.hcomb.common.service.EventEmitter;
+import eu.hcomb.common.service.impl.RedisEventEmitter;
 import eu.hcomb.common.web.BaseApp;
 
 public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
@@ -26,12 +28,21 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		new AuthorizationApp().run(args);
 	}
 	
+	@Override
+	public String getName() {
+        return "authz-service";
+    }
+	
 	public void configure(Binder binder) {
 		configureSecurity(binder);
 		
 		binder
 			.bind(UserService.class)
 			.to(UserServiceImpl.class);
+		
+		binder
+			.bind(EventEmitter.class)
+			.to(RedisEventEmitter.class);
 	}	
 
 	@Override

@@ -11,12 +11,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import redis.clients.jedis.JedisPool;
+
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 
 import eu.hcomb.authz.UserEvents;
 import eu.hcomb.authz.dto.UserDTO;
 import eu.hcomb.authz.service.UserService;
+import eu.hcomb.common.service.EventEmitter;
 import eu.hcomb.common.service.RedisService;
 
 @Api(tags="login")
@@ -28,7 +31,7 @@ public class LoginResource {
 	protected UserService userService;
 	
     @Inject 
-    protected RedisService eventChannel;
+    protected EventEmitter eventEmitter;
     
     @POST
     @Timed
@@ -41,7 +44,7 @@ public class LoginResource {
 
     	UserDTO user = userService.login(username, password);
 
-    	eventChannel.publish(UserEvents.USER_LOGIN, username);
+    	eventEmitter.emit(UserEvents.USER_LOGIN, username);
     	
     	return user;
     }
