@@ -48,6 +48,8 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 	@Override
 	public void run(AuthorizationConfig configuration, Environment environment) {
 		
+		init(environment, configuration);
+		
 		Module persistence = new PersistenceModule(configuration, environment) {
 			@Override
 			protected void initialize() {

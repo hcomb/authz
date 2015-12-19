@@ -21,6 +21,8 @@ authKey:
 authTimeout:
    3600
 
+rrouterUrl: http://localhost:8480/rrouter/api
+
 jdbcConfig:
    username: root
    password: root
@@ -35,13 +37,6 @@ corsConfig:
    origins: localhost, test.localhost
    headers: Cookie, Authorization
    allowCredentials: true
-
-redis:
-  host: localhost
-  port: 6379
-  minIdle: 0
-  maxIdle: 0
-  maxTotal: 1924
   
 swaggerConfig:
    baseUrl: localhost:8180
