@@ -17,8 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import redis.clients.jedis.JedisPool;
-
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 
@@ -26,7 +24,6 @@ import eu.hcomb.authz.UserEvents;
 import eu.hcomb.authz.dto.UserDTO;
 import eu.hcomb.authz.service.UserService;
 import eu.hcomb.common.service.EventEmitter;
-import eu.hcomb.common.service.RedisService;
 
 @Path("/users")
 @Api(tags="user")

@@ -16,10 +16,11 @@ import eu.hcomb.authz.service.mapper.RoleMapper;
 import eu.hcomb.authz.service.mapper.UserMapper;
 import eu.hcomb.common.jdbc.DatasourceHealthCheck;
 import eu.hcomb.common.jdbc.PersistenceModule;
-import eu.hcomb.common.redis.JedisModule;
 import eu.hcomb.common.resources.WhoAmI;
 import eu.hcomb.common.service.EventEmitter;
+import eu.hcomb.common.service.RedisService;
 import eu.hcomb.common.service.impl.RedisEventEmitter;
+import eu.hcomb.common.service.impl.RedisServiceJedisImpl;
 import eu.hcomb.common.web.BaseApp;
 
 public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
@@ -43,6 +44,11 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		binder
 			.bind(EventEmitter.class)
 			.to(RedisEventEmitter.class);
+		
+		binder
+			.bind(RedisService.class)
+			.to(RedisServiceJedisImpl.class);
+
 	}	
 
 	@Override
@@ -61,10 +67,7 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		};
 		
 		
-		
-		Module jedis = new JedisModule(configuration, environment);
-		
-		injector = Guice.createInjector(this, persistence, jedis);
+		injector = Guice.createInjector(this, persistence);
 		
 		defaultConfig(environment, configuration);
         
@@ -75,6 +78,8 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 		environment.healthChecks().register("mysql", injector.getInstance(DatasourceHealthCheck.class));
 		
 		setUpSwagger(configuration, environment);
+		
+		setupExceptionMappers();
 	}
 
 }
