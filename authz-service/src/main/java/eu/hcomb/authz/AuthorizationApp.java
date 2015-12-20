@@ -17,9 +17,7 @@ import eu.hcomb.authz.service.mapper.UserMapper;
 import eu.hcomb.common.jdbc.DatasourceHealthCheck;
 import eu.hcomb.common.jdbc.PersistenceModule;
 import eu.hcomb.common.resources.WhoAmI;
-import eu.hcomb.common.service.EventEmitter;
 import eu.hcomb.common.service.RedisService;
-import eu.hcomb.common.service.impl.RedisEventEmitter;
 import eu.hcomb.common.service.impl.RedisServiceJedisImpl;
 import eu.hcomb.common.web.BaseApp;
 
@@ -36,14 +34,11 @@ public class AuthorizationApp extends BaseApp<AuthorizationConfig> {
 	
 	public void configure(Binder binder) {
 		configureSecurity(binder);
-		
+		configureEventEmitter(binder);
+
 		binder
 			.bind(UserService.class)
 			.to(UserServiceImpl.class);
-		
-		binder
-			.bind(EventEmitter.class)
-			.to(RedisEventEmitter.class);
 		
 		binder
 			.bind(RedisService.class)

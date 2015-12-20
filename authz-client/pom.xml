@@ -44,6 +44,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>eu.hcomb</groupId>
+			<artifactId>common-client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
 	</dependencies>
 
 </project>
