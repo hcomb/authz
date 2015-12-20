@@ -8,7 +8,8 @@ require.config({
 		backbone: {
 			deps: [
 				'underscore',
-				'jquery'
+				'jquery',
+				'flatui'
 			],
 			exports: 'Backbone'
 		},
@@ -18,6 +19,7 @@ require.config({
 		}
 	},
 	paths: {
+		flatui: 'http://static.hcomb.eu/js/flat-ui.min',
 		jquery: 'http://static.hcomb.eu/js/jquery',
 		underscore: 'http://static.hcomb.eu/js/underscore',
 		backbone: 'http://static.hcomb.eu/js/backbone',

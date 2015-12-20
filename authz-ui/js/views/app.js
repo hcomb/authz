@@ -32,7 +32,7 @@ define([
 		},
 		render: function(){
 		var self = this;
-		  $(this.el).append("<button id='add'>Add list item</button>");
+		  $(this.el).append("<button type='button' class='btn btn-default' id='add'>Add list item</button>");
 		  $(this.el).append("<ul></ul>");
 		  _(this.collection.models).each(function(item){ // in case collection is not empty
 			self.appendItem(item);
