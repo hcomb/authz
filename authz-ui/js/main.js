@@ -18,11 +18,11 @@ require.config({
 		}
 	},
 	paths: {
-		jquery: 'vendor/jquery',
-		underscore: 'vendor/underscore',
-		backbone: 'vendor/backbone',
-		backboneLocalstorage: 'vendor/backbone.localStorage',
-		text: 'vendor/text'
+		jquery: 'http://static.hcomb.eu/js/jquery',
+		underscore: 'http://static.hcomb.eu/js/underscore',
+		backbone: 'http://static.hcomb.eu/js/backbone',
+		backboneLocalstorage: 'http://static.hcomb.eu/js/backbone.localStorage',
+		text: 'http://static.hcomb.eu/js/text'
 	}
 });
 
